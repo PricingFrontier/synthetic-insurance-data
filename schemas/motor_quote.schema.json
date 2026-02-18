@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://synthetic-insurance-data/schemas/motor_quote.schema.json",
+  "title": "UK Motor Insurance Comparison Site Quote",
+  "description": "Complete schema for a UK motor insurance quote as submitted via a price comparison website, enriched with policy administration system metadata.",
+  "type": "object",
+  "properties": {
+
+    "quote_metadata": {
+      "description": "Fields attached by the aggregator platform, not entered by the customer.",
+      "type": "object",
+      "properties": {
+        "quote_id":            { "type": "string", "description": "Unique quote reference, e.g. QUO-2024-00012345" },
+        "quote_version":       { "type": "integer", "description": "Version number if the quote was re-rated (1 = initial)" },
+        "quote_timestamp":     { "type": "string", "format": "date-time", "description": "ISO-8601 timestamp when the quote was generated" },
+        "channel":             { "type": "string", "enum": ["compare_the_market", "gocompare", "confused", "moneysupermarket", "direct_web", "direct_phone", "broker", "other"], "description": "Distribution channel" },
+        "aggregator_quote_id": { "type": ["string", "null"], "description": "The aggregator's own quote reference, if via comparison site" }
+      },
+      "required": ["quote_id", "quote_timestamp", "channel"]
+    },
+
+    "policy_details": {
+      "description": "Policy-level information: dates, cover type, payment method.",
+      "type": "object",
+      "properties": {
+        "policy_number":       { "type": ["string", "null"], "description": "Assigned only if the quote is bound/purchased" },
+        "cover_start_date":    { "type": "string", "format": "date", "description": "Requested cover start date" },
+        "cover_end_date":      { "type": "string", "format": "date", "description": "Cover end date (normally start + 12 months)" },
+        "cover_type":          { "type": "string", "enum": ["comprehensive", "third_party_fire_and_theft", "third_party_only"] },
+        "payment_frequency":   { "type": "string", "enum": ["annual", "monthly"] },
+        "voluntary_excess":    { "type": "integer", "description": "Customer-chosen voluntary excess in GBP (e.g. 0, 100, 250, 500, 1000)" },
+        "compulsory_excess":   { "type": "integer", "description": "Insurer-set compulsory excess in GBP" },
+        "ncd_years":           { "type": "integer", "minimum": 0, "maximum": 20, "description": "No Claims Discount years earned" },
+        "ncd_protected":       { "type": "boolean", "description": "Is NCD protection included?" },
+        "usage": {
+          "type": "object",
+          "properties": {
+            "social_domestic_pleasure": { "type": "boolean" },
+            "commuting":                { "type": "boolean" },
+            "business_use":             { "type": ["string", "null"], "enum": ["class_1", "class_2", "class_3", null], "description": "class_1 = policyholder only, class_2 = +named drivers, class_3 = commercial travelling" }
+          },
+          "required": ["social_domestic_pleasure", "commuting"]
+        },
+        "annual_mileage":      { "type": "integer", "description": "Estimated annual mileage" },
+        "business_mileage":    { "type": ["integer", "null"], "description": "Of annual_mileage, how many miles are for business" },
+        "is_renewal":          { "type": "boolean", "description": "Is this a renewal of an existing policy?" },
+        "previous_insurer":    { "type": ["string", "null"], "description": "Name of previous insurer, if any" }
+      },
+      "required": ["cover_start_date", "cover_type", "payment_frequency", "voluntary_excess", "ncd_years", "ncd_protected", "usage", "annual_mileage", "is_renewal"]
+    },
+
+    "proposer": {
+      "description": "The policyholder / main driver. This is the person buying the policy.",
+      "type": "object",
+      "properties": {
+        "title":               { "type": "string", "enum": ["mr", "mrs", "miss", "ms", "dr", "rev", "prof"] },
+        "first_name":          { "type": "string" },
+        "last_name":           { "type": "string" },
+        "date_of_birth":       { "type": "string", "format": "date" },
+        "gender":              { "type": "string", "enum": ["male", "female"], "description": "Collected on form but not used for pricing post EU Gender Directive 2012" },
+        "marital_status":      { "type": "string", "enum": ["single", "married", "civil_partnership", "divorced", "widowed", "separated", "living_with_partner"] },
+        "uk_resident_since_birth": { "type": "boolean" },
+        "uk_resident_since":   { "type": ["string", "null"], "format": "date", "description": "If not resident since birth, date of UK residency" },
+        "employment_status":   { "type": "string", "enum": ["employed", "self_employed", "retired", "unemployed", "student_full_time", "student_part_time", "house_person", "not_employed_due_to_disability", "voluntary_work"] },
+        "primary_occupation":  { "type": ["string", "null"], "description": "ABI occupation description, e.g. 'Software Engineer', 'Nurse'" },
+        "primary_occupation_industry": { "type": ["string", "null"], "description": "Industry sector, e.g. 'Information Technology', 'Healthcare'" },
+        "secondary_occupation": { "type": ["string", "null"], "description": "Secondary job title if applicable" },
+        "licence": {
+          "type": "object",
+          "properties": {
+            "licence_type":      { "type": "string", "enum": ["full_uk", "provisional_uk", "full_eu", "full_international", "provisional_international", "none"] },
+            "licence_held_years": { "type": "integer", "minimum": 0, "description": "Complete years licence held" },
+            "licence_date":      { "type": ["string", "null"], "format": "date", "description": "Date licence was obtained" },
+            "additional_licence_restrictions": { "type": ["string", "null"], "description": "e.g. automatic only" }
+          },
+          "required": ["licence_type", "licence_held_years"]
+        },
+        "has_medical_conditions": { "type": "boolean", "description": "Any medical conditions notified to DVLA?" },
+        "medical_condition_details": { "type": ["string", "null"], "description": "E.g. 'Diabetes - insulin treated'" },
+        "has_criminal_convictions": { "type": "boolean", "description": "Any unspent non-motoring criminal convictions?" },
+        "access_to_other_vehicles": { "type": "boolean", "description": "Does the proposer have regular access to another vehicle?" },
+        "is_homeowner":        { "type": "boolean" },
+        "is_main_driver":      { "type": "boolean", "description": "Is the proposer the main driver of this vehicle?" },
+        "relationship_to_main_driver": { "type": ["string", "null"], "description": "If proposer is NOT main driver, their relationship to the main driver" },
+        "claims":              { "$ref": "#/$defs/claims_array" },
+        "convictions":         { "$ref": "#/$defs/convictions_array" }
+      },
+      "required": ["title", "first_name", "last_name", "date_of_birth", "gender", "marital_status", "uk_resident_since_birth", "employment_status", "licence", "has_medical_conditions", "has_criminal_convictions", "access_to_other_vehicles", "is_homeowner", "is_main_driver", "claims", "convictions"]
+    },
+
+    "additional_drivers": {
+      "description": "Array of additional named drivers on the policy (0-4 typically).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title":               { "type": "string", "enum": ["mr", "mrs", "miss", "ms", "dr", "rev", "prof"] },
+          "first_name":          { "type": "string" },
+          "last_name":           { "type": "string" },
+          "date_of_birth":       { "type": "string", "format": "date" },
+          "gender":              { "type": "string", "enum": ["male", "female"] },
+          "marital_status":      { "type": "string", "enum": ["single", "married", "civil_partnership", "divorced", "widowed", "separated", "living_with_partner"] },
+          "relationship_to_proposer": { "type": "string", "enum": ["spouse", "partner", "parent", "child", "sibling", "other_family", "common_law_partner", "business_partner", "employee", "other"] },
+          "employment_status":   { "type": "string", "enum": ["employed", "self_employed", "retired", "unemployed", "student_full_time", "student_part_time", "house_person", "not_employed_due_to_disability", "voluntary_work"] },
+          "primary_occupation":  { "type": ["string", "null"] },
+          "primary_occupation_industry": { "type": ["string", "null"] },
+          "licence": {
+            "type": "object",
+            "properties": {
+              "licence_type":      { "type": "string", "enum": ["full_uk", "provisional_uk", "full_eu", "full_international", "provisional_international", "none"] },
+              "licence_held_years": { "type": "integer", "minimum": 0 },
+              "licence_date":      { "type": ["string", "null"], "format": "date" },
+              "additional_licence_restrictions": { "type": ["string", "null"] }
+            },
+            "required": ["licence_type", "licence_held_years"]
+          },
+          "has_medical_conditions": { "type": "boolean" },
+          "has_criminal_convictions": { "type": "boolean" },
+          "access_to_other_vehicles": { "type": "boolean" },
+          "uk_resident_since_birth": { "type": "boolean" },
+          "uk_resident_since":   { "type": ["string", "null"], "format": "date" },
+          "claims":              { "$ref": "#/$defs/claims_array" },
+          "convictions":         { "$ref": "#/$defs/convictions_array" }
+        },
+        "required": ["title", "first_name", "last_name", "date_of_birth", "gender", "marital_status", "relationship_to_proposer", "employment_status", "licence", "has_medical_conditions", "has_criminal_convictions", "access_to_other_vehicles", "claims", "convictions"]
+      }
+    },
+
+    "vehicle": {
+      "description": "The insured vehicle.",
+      "type": "object",
+      "properties": {
+        "registration_number": { "type": "string", "description": "UK VRM, e.g. 'AB12 CDE'" },
+        "make":                { "type": "string", "description": "e.g. 'Volkswagen'" },
+        "model":               { "type": "string", "description": "e.g. 'Golf'" },
+        "variant":             { "type": ["string", "null"], "description": "Trim/variant, e.g. 'SE 1.4 TSI 125'" },
+        "year_of_manufacture": { "type": "integer" },
+        "year_of_registration": { "type": "integer" },
+        "body_type":           { "type": "string", "enum": ["hatchback", "saloon", "estate", "suv", "convertible", "coupe", "mpv", "pickup", "van", "other"] },
+        "fuel_type":           { "type": "string", "enum": ["petrol", "diesel", "electric", "hybrid_petrol_electric", "hybrid_diesel_electric", "plug_in_hybrid", "lpg", "other"] },
+        "transmission":        { "type": "string", "enum": ["manual", "automatic", "semi_automatic"] },
+        "engine_size_cc":      { "type": ["integer", "null"], "description": "Engine capacity in cc. Null for pure electric." },
+        "engine_power_bhp":    { "type": ["integer", "null"], "description": "Brake horsepower" },
+        "number_of_doors":     { "type": "integer" },
+        "number_of_seats":     { "type": "integer" },
+        "insurance_group":     { "type": "integer", "minimum": 1, "maximum": 50, "description": "ABI insurance group (1-50)" },
+        "abi_code":            { "type": ["string", "null"], "description": "ABI vehicle code for rating lookup" },
+        "estimated_value":     { "type": "integer", "description": "Estimated current market value in GBP" },
+        "is_imported":         { "type": "boolean" },
+        "is_right_hand_drive": { "type": "boolean" },
+        "has_been_modified":   { "type": "boolean" },
+        "modifications":       {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "modification_type": { "type": "string", "description": "e.g. 'Alloy Wheels', 'Engine Tuning', 'Body Kit', 'Tinted Windows', 'Exhaust System'" },
+              "details":           { "type": ["string", "null"] }
+            },
+            "required": ["modification_type"]
+          },
+          "description": "List of modifications, empty if has_been_modified is false"
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "alarm":          { "type": "string", "enum": ["factory_fitted", "aftermarket_thatcham", "aftermarket_non_thatcham", "none"] },
+            "immobiliser":    { "type": "string", "enum": ["factory_fitted", "aftermarket_thatcham", "aftermarket_non_thatcham", "none"] },
+            "tracker":        { "type": "string", "enum": ["thatcham_cat_5", "thatcham_cat_6", "thatcham_cat_7", "thatcham_s5", "thatcham_s7", "non_thatcham", "none"] }
+          },
+          "required": ["alarm", "immobiliser", "tracker"]
+        },
+        "overnight_location":  { "type": "string", "enum": ["garage", "driveway", "street_near_home", "street_away_from_home", "car_park", "private_property", "work_car_park"] },
+        "daytime_location":    { "type": "string", "enum": ["at_home", "office_car_park", "street_near_work", "public_car_park", "customers_premises", "other"] },
+        "owner":               { "type": "string", "enum": ["proposer", "spouse_partner", "parent", "company", "leasing_company", "other"] },
+        "registered_keeper":   { "type": "string", "enum": ["proposer", "spouse_partner", "parent", "company", "leasing_company", "other"] },
+        "purchase_date":       { "type": ["string", "null"], "format": "date" },
+        "current_mileage":     { "type": ["integer", "null"] }
+      },
+      "required": ["registration_number", "make", "model", "year_of_manufacture", "body_type", "fuel_type", "transmission", "number_of_doors", "number_of_seats", "insurance_group", "estimated_value", "is_imported", "is_right_hand_drive", "has_been_modified", "modifications", "security", "overnight_location", "owner", "registered_keeper"]
+    },
+
+    "address": {
+      "description": "Proposer's residential address.",
+      "type": "object",
+      "properties": {
+        "house_number_or_name": { "type": "string" },
+        "address_line_1":       { "type": "string" },
+        "address_line_2":       { "type": ["string", "null"] },
+        "city":                 { "type": "string" },
+        "county":               { "type": ["string", "null"] },
+        "postcode":             { "type": "string", "description": "UK postcode, e.g. 'SW1A 1AA'" },
+        "years_at_address":     { "type": "integer", "minimum": 0 },
+        "months_at_address":    { "type": "integer", "minimum": 0, "maximum": 11, "description": "Additional months beyond whole years at this address" }
+      },
+      "required": ["house_number_or_name", "address_line_1", "city", "postcode", "years_at_address"]
+    },
+
+    "previous_address": {
+      "description": "Previous address if at current address less than 3 years.",
+      "type": ["object", "null"],
+      "properties": {
+        "house_number_or_name": { "type": "string" },
+        "address_line_1":       { "type": "string" },
+        "address_line_2":       { "type": ["string", "null"] },
+        "city":                 { "type": "string" },
+        "county":               { "type": ["string", "null"] },
+        "postcode":             { "type": "string" }
+      },
+      "required": ["house_number_or_name", "address_line_1", "city", "postcode"]
+    },
+
+    "add_ons": {
+      "description": "Optional add-on products the customer has selected or been offered.",
+      "type": "object",
+      "properties": {
+        "breakdown_cover":        { "$ref": "#/$defs/add_on_selection" },
+        "legal_expenses":         { "$ref": "#/$defs/add_on_selection" },
+        "courtesy_car":           { "$ref": "#/$defs/add_on_selection" },
+        "windscreen_cover":       { "$ref": "#/$defs/add_on_selection" },
+        "personal_accident":      { "$ref": "#/$defs/add_on_selection" },
+        "key_cover":              { "$ref": "#/$defs/add_on_selection" },
+        "motor_legal_protection": { "$ref": "#/$defs/add_on_selection" },
+        "excess_protection":      { "$ref": "#/$defs/add_on_selection" },
+        "tools_in_transit":       { "$ref": "#/$defs/add_on_selection" },
+        "personal_belongings":    { "$ref": "#/$defs/add_on_selection" },
+        "no_claims_step_back":    { "$ref": "#/$defs/add_on_selection" }
+      }
+    }
+
+  },
+
+  "required": ["quote_metadata", "policy_details", "proposer", "additional_drivers", "vehicle", "address", "add_ons"],
+
+  "$defs": {
+    "claims_array": {
+      "type": "array",
+      "description": "Claims in the last 5 years.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_date":    { "type": "string", "format": "date", "description": "Date of the incident" },
+          "claim_type":    { "type": "string", "enum": ["accident", "theft", "fire", "windscreen", "vandalism", "storm_flood", "personal_injury", "other"] },
+          "fault":         { "type": "string", "enum": ["at_fault", "not_at_fault", "pending"] },
+          "status":        { "type": "string", "enum": ["settled", "open"] },
+          "amount_paid":   { "type": "number", "description": "Total amount paid by insurer in GBP (0 if notification only)" },
+          "personal_injury_claimed": { "type": "boolean" },
+          "ncd_affected":  { "type": "boolean", "description": "Did this claim affect the NCD?" }
+        },
+        "required": ["claim_date", "claim_type", "fault", "status"]
+      }
+    },
+
+    "convictions_array": {
+      "type": "array",
+      "description": "Motoring convictions in the last 5 years.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "conviction_code": { "type": "string", "description": "DVLA conviction code, e.g. 'SP30', 'SP50', 'DR10', 'CU80', 'IN10'" },
+          "conviction_date": { "type": "string", "format": "date", "description": "Date of the offence" },
+          "points":          { "type": "integer", "minimum": 0, "maximum": 11 },
+          "fine_amount":     { "type": ["number", "null"], "description": "Fine in GBP if applicable" },
+          "ban_months":      { "type": ["integer", "null"], "description": "Driving ban length in months, null if no ban" },
+          "is_disqualified": { "type": "boolean", "description": "Was the driver disqualified?" }
+        },
+        "required": ["conviction_code", "conviction_date", "points", "is_disqualified"]
+      }
+    },
+
+    "add_on_selection": {
+      "type": "object",
+      "properties": {
+        "selected": { "type": "boolean" },
+        "level":    { "type": ["string", "null"], "description": "Cover level if applicable, e.g. 'roadside', 'national_recovery', 'european'" }
+      },
+      "required": ["selected"]
+    }
+  }
+}

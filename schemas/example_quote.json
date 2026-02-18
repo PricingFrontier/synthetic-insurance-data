@@ -1,0 +1,202 @@
+{
+  "quote_metadata": {
+    "quote_id": "QUO-2025-00048291",
+    "quote_version": 1,
+    "quote_timestamp": "2025-01-15T14:23:07Z",
+    "channel": "compare_the_market",
+    "aggregator_quote_id": "CTM-9182736450"
+  },
+
+  "policy_details": {
+    "policy_number": null,
+    "cover_start_date": "2025-02-01",
+    "cover_end_date": "2026-01-31",
+    "cover_type": "comprehensive",
+    "payment_frequency": "annual",
+    "voluntary_excess": 250,
+    "compulsory_excess": 150,
+    "ncd_years": 5,
+    "ncd_protected": true,
+    "usage": {
+      "social_domestic_pleasure": true,
+      "commuting": true,
+      "business_use": null
+    },
+    "annual_mileage": 8000,
+    "business_mileage": null,
+    "is_renewal": false,
+    "previous_insurer": "Direct Line"
+  },
+
+  "proposer": {
+    "title": "mr",
+    "first_name": "James",
+    "last_name": "Richardson",
+    "date_of_birth": "1987-04-12",
+    "gender": "male",
+    "marital_status": "married",
+    "uk_resident_since_birth": true,
+    "uk_resident_since": null,
+    "employment_status": "employed",
+    "primary_occupation": "Accountant",
+    "primary_occupation_industry": "Finance & Accounting",
+    "secondary_occupation": null,
+    "licence": {
+      "licence_type": "full_uk",
+      "licence_held_years": 15,
+      "licence_date": "2010-06-20",
+      "additional_licence_restrictions": null
+    },
+    "has_medical_conditions": false,
+    "medical_condition_details": null,
+    "has_criminal_convictions": false,
+    "access_to_other_vehicles": false,
+    "is_homeowner": true,
+    "is_main_driver": true,
+    "relationship_to_main_driver": null,
+    "claims": [],
+    "convictions": [
+      {
+        "conviction_code": "SP30",
+        "conviction_date": "2023-03-18",
+        "points": 3,
+        "fine_amount": 100,
+        "ban_months": null,
+        "is_disqualified": false
+      }
+    ]
+  },
+
+  "additional_drivers": [
+    {
+      "title": "mrs",
+      "first_name": "Sarah",
+      "last_name": "Richardson",
+      "date_of_birth": "1989-09-03",
+      "gender": "female",
+      "marital_status": "married",
+      "relationship_to_proposer": "spouse",
+      "employment_status": "employed",
+      "primary_occupation": "Nurse",
+      "primary_occupation_industry": "Healthcare",
+      "licence": {
+        "licence_type": "full_uk",
+        "licence_held_years": 12,
+        "licence_date": "2013-01-10",
+        "additional_licence_restrictions": null
+      },
+      "has_medical_conditions": false,
+      "has_criminal_convictions": false,
+      "access_to_other_vehicles": true,
+      "uk_resident_since_birth": true,
+      "uk_resident_since": null,
+      "claims": [
+        {
+          "claim_date": "2022-11-05",
+          "claim_type": "accident",
+          "fault": "not_at_fault",
+          "status": "settled",
+          "amount_paid": 2340.00,
+          "personal_injury_claimed": false,
+          "ncd_affected": false
+        }
+      ],
+      "convictions": []
+    }
+  ],
+
+  "vehicle": {
+    "registration_number": "WR21 FKT",
+    "make": "Volkswagen",
+    "model": "Golf",
+    "variant": "Life 1.5 TSI 130",
+    "year_of_manufacture": 2021,
+    "year_of_registration": 2021,
+    "body_type": "hatchback",
+    "fuel_type": "petrol",
+    "transmission": "manual",
+    "engine_size_cc": 1498,
+    "engine_power_bhp": 130,
+    "number_of_doors": 5,
+    "number_of_seats": 5,
+    "insurance_group": 16,
+    "abi_code": "32120703",
+    "estimated_value": 17500,
+    "is_imported": false,
+    "is_right_hand_drive": true,
+    "has_been_modified": false,
+    "modifications": [],
+    "security": {
+      "alarm": "factory_fitted",
+      "immobiliser": "factory_fitted",
+      "tracker": "none"
+    },
+    "overnight_location": "driveway",
+    "daytime_location": "office_car_park",
+    "owner": "proposer",
+    "registered_keeper": "proposer",
+    "purchase_date": "2021-09-15",
+    "current_mileage": 28400
+  },
+
+  "address": {
+    "house_number_or_name": "14",
+    "address_line_1": "Oakwood Drive",
+    "address_line_2": null,
+    "city": "Bristol",
+    "county": "Avon",
+    "postcode": "BS9 4QT",
+    "years_at_address": 6,
+    "months_at_address": 3
+  },
+
+  "previous_address": null,
+
+  "add_ons": {
+    "breakdown_cover": {
+      "selected": true,
+      "level": "national_recovery"
+    },
+    "legal_expenses": {
+      "selected": true,
+      "level": null
+    },
+    "courtesy_car": {
+      "selected": false,
+      "level": null
+    },
+    "windscreen_cover": {
+      "selected": false,
+      "level": null
+    },
+    "personal_accident": {
+      "selected": false,
+      "level": null
+    },
+    "key_cover": {
+      "selected": true,
+      "level": null
+    },
+    "motor_legal_protection": {
+      "selected": false,
+      "level": null
+    },
+    "excess_protection": {
+      "selected": false,
+      "level": null
+    },
+    "tools_in_transit": {
+      "selected": false,
+      "level": null
+    },
+    "personal_belongings": {
+      "selected": false,
+      "level": null
+    },
+    "no_claims_step_back": {
+      "selected": false,
+      "level": null
+    }
+  }
+
+}
