@@ -30,9 +30,9 @@ from generator.constants import (
 class QuoteGenerator:
     """Generate synthetic UK motor insurance quote request JSONs."""
 
-    def __init__(self, seed: int | None = None):
+    def __init__(self, seed: int | None = None, data: DistributionData | None = None):
         self.rng = np.random.default_rng(seed)
-        self.data = DistributionData()
+        self.data = data if data is not None else DistributionData()
         self._quote_counter = 0
 
     # ── Public API ────────────────────────────────────────────────────────
@@ -40,6 +40,11 @@ class QuoteGenerator:
     def generate(self, n: int = 1) -> list[dict]:
         """Generate n quote request dicts."""
         return [self._generate_one() for _ in range(n)]
+
+    def generate_iter(self, n: int = 1):
+        """Yield n quote request dicts one at a time (memory-efficient)."""
+        for _ in range(n):
+            yield self._generate_one()
 
     def _generate_one(self) -> dict:
         """Generate a single complete quote request."""

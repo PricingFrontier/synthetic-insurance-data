@@ -2,14 +2,24 @@
 Data acquisition script for synthetic UK motor insurance dataset.
 
 Downloads public datasets used to build realistic distributions:
-  1. freMTPL2freq + freMTPL2sev (OpenML) — claim frequency & severity
-  2. DfT VEH0120_UK — vehicles by make/model/fuel (37 MB CSV)
-  3. DfT VEH0220 — vehicles by make/model/fuel/engine size (38 MB CSV)
-  4. DfT VEH1107 — vehicles by body type and years since first use
-  5. DfT VEH1103 — vehicles by body type and fuel type over time
-  6. DVLA driving licence data — licence holders by age/gender
-  7. DfT NTS0201 — licence holders by age and sex (England)
-  8. ONS baby names — boys and girls, England & Wales
+
+  Quote generation:
+    1. freMTPL2freq + freMTPL2sev (OpenML) — claim frequency & severity
+    2. DfT VEH0120_UK — vehicles by make/model/fuel (37 MB CSV)
+    3. DfT VEH0220 — vehicles by make/model/fuel/engine size (38 MB CSV)
+    4. DfT VEH1107 — vehicles by body type and years since first use
+    5. DfT VEH1103 — vehicles by body type and fuel type over time
+    6. DVLA driving licence data — licence holders by age/gender
+    7. DfT NTS0201 — licence holders by age and sex (England)
+    8. ONS baby names — boys and girls, England & Wales
+    9. MoJ motoring convictions
+   10. Nomis APS occupation data
+
+  Claims modelling (additional):
+   11. STATS19 full tables — collisions, vehicles, casualties (2024)
+   12. FCA GI Value Measures — insurer-level claims data
+   13. OIC personal injury claims data (monthly)
+   14. Police recorded crime — vehicle offences by area
 
 Usage:
     uv run python acquire_data.py [--dataset NAME] [--all]
@@ -95,6 +105,48 @@ DATASETS = {
         "url": "https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/birthsdeathsandmarriages/livebirths/datasets/babynamesenglandandwalesbabynamesstatisticsgirls/2024/girlsnames2024.xlsx",
         "filename": "girlsnames2024.xlsx",
         "description": "ONS baby names — girls, England & Wales (2024 edition)",
+    },
+    # ══════════════════════════════════════════════════════════════════
+    # Claims modelling datasets
+    # ══════════════════════════════════════════════════════════════════
+    # ── STATS19 full tables (2024 validated) ──────────────────────────
+    "stats19_collisions_2024": {
+        "url": "https://data.dft.gov.uk/road-accidents-safety-data/dft-road-casualty-statistics-collision-2024.csv",
+        "filename": "dft-road-casualty-statistics-collision-2024.csv",
+        "description": "STATS19 collisions 2024 — accident circumstances, severity, road type, weather (18.6 MB)",
+    },
+    "stats19_vehicles_2024": {
+        "url": "https://data.dft.gov.uk/road-accidents-safety-data/dft-road-casualty-statistics-vehicle-2024.csv",
+        "filename": "dft-road-casualty-statistics-vehicle-2024.csv",
+        "description": "STATS19 vehicles 2024 — vehicle type, age, manoeuvre, driver age/sex (19.2 MB)",
+    },
+    "stats19_casualties_2024": {
+        "url": "https://data.dft.gov.uk/road-accidents-safety-data/dft-road-casualty-statistics-casualty-2024.csv",
+        "filename": "dft-road-casualty-statistics-casualty-2024.csv",
+        "description": "STATS19 casualties 2024 — casualty severity, age, sex, type (9.8 MB)",
+    },
+    # ── FCA General Insurance Value Measures ──────────────────────────
+    "fca_gi_value_measures_2024": {
+        "url": "https://www.fca.org.uk/publication/data/gi-value-measures-data-2024.xlsx",
+        "filename": "gi-value-measures-data-2024.xlsx",
+        "description": "FCA GI value measures 2024 — insurer-level claims freq, avg cost, loss ratios",
+    },
+    # ── OIC Official Injury Claim data ────────────────────────────────
+    "oic_monthly_2024_archive": {
+        "url": "https://www.officialinjuryclaim.org.uk/media/dh2po3lx/oic-monthly-data-reporting-archive-2024.zip",
+        "filename": "oic-monthly-data-reporting-archive-2024.zip",
+        "description": "OIC monthly PI claims data archive 2024 — volumes, types, settlements",
+    },
+    "oic_monthly_jan_2026": {
+        "url": "https://www.officialinjuryclaim.org.uk/media/w33b2vrj/oic-monthly-data-january-2026.xlsx",
+        "filename": "oic-monthly-data-january-2026.xlsx",
+        "description": "OIC monthly PI claims data Jan 2026 — latest snapshot",
+    },
+    # ── Police recorded crime — vehicle offences ──────────────────────
+    "police_recorded_crime": {
+        "url": "https://assets.publishing.service.gov.uk/media/67986218dba2250018cc0efc/prc-pfa-open-data-mar2003-onwards-tables.ods",
+        "filename": "prc-pfa-open-data-mar2003-onwards.ods",
+        "description": "Police recorded crime by offence and police force area (includes vehicle theft)",
     },
 }
 
