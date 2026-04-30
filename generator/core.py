@@ -550,11 +550,9 @@ class QuoteGenerator:
             business_mileage = int(annual_mileage * self.rng.uniform(0.15, 0.40))
             business_mileage = round(business_mileage / 500) * 500
 
-        # Renewal
-        is_renewal = self.rng.random() < 0.60
-        prev_insurer = None
-        if is_renewal:
-            prev_insurer = self._weighted_choice(PREVIOUS_INSURERS)
+        # Aggregator quotes are always new business
+        is_renewal = False
+        prev_insurer = self._weighted_choice(PREVIOUS_INSURERS)
 
         return {
             "policy_number": None,
